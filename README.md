@@ -8,7 +8,7 @@ på [Chalmers Tekniska Högskola](https://www.chalmers.se/).
 
 Om du är här som student kan du öppna energymodellerna genom att klicka på knappen nedan:
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/hanschen/SEE060_Energibalansmodeller/HEAD?labpath=introduktion.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/SEE-GEO/SEE060_Jordens_energibalans/HEAD?urlpath=%2Fdoc%2Ftree%2Fintroduktion.ipynb)
 
 Det kan ta lite tid innan det startar.
 
@@ -25,8 +25,7 @@ Du behöver följande Python-paket installerade för att kunna köra koden:
 - ipywidgets
 - jupyterlab-widgets
 
-[zip]: https://github.com/hanschen/SEE060_Energibalansmodeller/archive/refs/heads/master.zip
-
+[zip]: https://github.com/SEE-GEO/SEE060_Jordens_energibalans/archive/refs/heads/main.zip
 
 ## Tack
 
@@ -39,7 +38,7 @@ Upplägget är baserat på [eb-simple-model] skapad av Hannah Frostenberg och Pa
 
 Hittar du något konstigt får du gärna öppna ett [Issue] här på GitHub.
 
-[Issue]: https://github.com/hanschen/SEE060_Energibalansmodeller/issues
+[Issue]: https://github.com/SEE-GEO/SEE060_Jordens_energibalans/issues
 
 
 ## Kontakt
