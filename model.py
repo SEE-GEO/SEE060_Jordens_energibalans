@@ -7,17 +7,18 @@ from ipywidgets import AppLayout, HBox, VBox, widgets
 from localization import localize
 
 
-def run(temperatures, radiation_model, variables, title=None, colors=None, **kwargs):
+def run(model, parameters, title=None, colors=None, **kwargs):
     """Display control widgets and model output.
 
-    ``temperatures`` should be a dict containing temperatures in degree Celsius.
-    The temperatures will be displayed as thermometers.
+    ``model`` is a callable for the model.
 
-    ``ratiation_model`` is a callable accepting arguments with names in ``variables``.
+    ``parameters`` is a dict with parameter names as keys and initial values as values.
 
     Accepts optional title for the figure, list of colors for the thermometers, and
     kwargs passed to the Thermometer class.
     """
+
+    temperatures = model(**parameters)
 
     num_thermometers = len(temperatures)
     if colors is None:
@@ -37,10 +38,10 @@ def run(temperatures, radiation_model, variables, title=None, colors=None, **kwa
     widgets = []
     sliders = []
 
-    for var in variables:
-        description_label = _create_decription_label(var)
-        slider = _create_slider(var)
-        unit_label = _create_unit_label(var)
+    for param, value in parameters.items():
+        description_label = _create_decription_label(param)
+        slider = _create_slider(param, value)
+        unit_label = _create_unit_label(param)
         sliders.append(slider)
         widgets.append(HBox([description_label, slider, unit_label]))
 
@@ -59,7 +60,7 @@ def run(temperatures, radiation_model, variables, title=None, colors=None, **kwa
 
     # Update them when a slider changes
     def update(change):
-        temperatures = radiation_model(*[slider.value for slider in sliders])
+        temperatures = model(*[slider.value for slider in sliders])
         for i, (description, temperature) in enumerate(temperatures.items()):
             kwargs_current = kwargs.copy()
             kwargs_current["facecolor"] = colors[i]
@@ -78,7 +79,7 @@ def run(temperatures, radiation_model, variables, title=None, colors=None, **kwa
     )
 
 
-def _create_slider(variable):
+def _create_slider(variable, value):
     """Return a slider widget for ``variable``.
 
     Parameters
@@ -90,63 +91,50 @@ def _create_slider(variable):
     layout = widgets.Layout(width="60%", height="auto")
 
     if variable == "temperature":
-        return widgets.FloatSlider(
-            value=20.0,
-            min=-273.0,
-            max=100.0,
-            step=1.0,
-            readout_format=".0f",
-            layout=layout,
-        )
+        minval = -273.0
+        maxval = 100.0
+        step = 1.0
+        readout_format = ".0f"
+    elif variable == "solar_intensity_percent":
+        minval = 50.0
+        maxval = 150.0
+        step = 1.0
+        readout_format = ".0f"
+    elif variable == "planet_albedo":
+        minval = 0.0
+        maxval = 1.0
+        step = 0.01
+        readout_format = ".2f"
+    elif variable == "infrared_emissivity":
+        minval = 0.7
+        maxval = 1.0
+        step = 0.001
+        readout_format = ".3f"
+    elif variable == "optical_absorptivity":
+        minval = 0.0
+        maxval = 0.5
+        step = 0.001
+        readout_format = ".3f"
+    else:
+        raise ValueError(f"invalid variable: {variable}")
 
-    elif variable == "solar":
-        return widgets.FloatSlider(
-            value=100.0,
-            min=50.0,
-            max=150.0,
-            step=1.0,
-            readout_format=".0f",
-            layout=layout,
-        )
-
-    elif variable == "albedo":
-        return widgets.FloatSlider(
-            value=0.30,
-            min=0.0,
-            max=1.0,
-            step=0.01,
-            readout_format=".2f",
-            layout=layout,
-        )
-
-    elif variable == "emissivity":
-        return widgets.FloatSlider(
-            value=0.9,
-            min=0.7,
-            max=1.0,
-            step=0.001,
-            readout_format=".3f",
-            layout=layout,
-        )
-
-    elif variable == "absorptivity":
-        return widgets.FloatSlider(
-            value=0.105,
-            min=0.0,
-            max=0.5,
-            step=0.001,
-            readout_format=".3f",
-            layout=layout,
-        )
+    return widgets.FloatSlider(
+        value=value,
+        min=minval,
+        max=maxval,
+        step=step,
+        readout_format=readout_format,
+        layout=layout,
+    )
 
 
 def _create_decription_label(variable):
     descriptions = {
         "temperature": "Temperature",
-        "solar": "Solar intensity",
-        "albedo": "Planet albedo",
-        "emissivity": "Infrared emissivity",
-        "absorptivity": "Optical absorptivity",
+        "solar_intensity_percent": "Solar intensity",
+        "planet_albedo": "Planet albedo",
+        "infrared_emissivity": "Infrared emissivity",
+        "optical_absorptivity": "Optical absorptivity",
     }
     layout = widgets.Layout(
         width="20%", height="auto", display="flex", justify_content="flex-end"
@@ -158,10 +146,10 @@ def _create_decription_label(variable):
 def _create_unit_label(variable):
     units = {
         "temperature": "°C",
-        "solar": "% of present value",
-        "albedo": "(fraction)",
-        "emissivity": "(fraction)",
-        "absorptivity": "(fraction)",
+        "solar_intensity_percent": "% of present value",
+        "planet_albedo": "(fraction)",
+        "infrared_emissivity": "(fraction)",
+        "optical_absorptivity": "(fraction)",
     }
     layout = widgets.Layout(width="20%", height="auto")
     unit = localize(units[variable])

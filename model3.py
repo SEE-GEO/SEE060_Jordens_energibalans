@@ -41,16 +41,13 @@ def radiation_model_greenhouse_effect_and_solar_absorption(
     return temperatures
 
 
-temperatures = radiation_model_greenhouse_effect_and_solar_absorption(
-    solar_intensity_percent=100,
-    planet_albedo=0.3,
-    infrared_emissivity=0.9,
-    optical_absorptivity=0.105,
-)
-
 model.run(
-    temperatures,
-    radiation_model=radiation_model_greenhouse_effect_and_solar_absorption,
-    variables=["solar", "albedo", "emissivity", "absorptivity"],
+    model=radiation_model_greenhouse_effect_and_solar_absorption,
+    parameters={
+        "solar_intensity_percent": 100.0,
+        "planet_albedo": 0.3,
+        "infrared_emissivity": 0.9,
+        "optical_absorptivity": 0.105,
+    },
     title="With greenhouse effect and solar absorption",
 )
