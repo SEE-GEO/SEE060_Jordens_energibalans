@@ -7,7 +7,78 @@ from ipywidgets import AppLayout, HBox, VBox, widgets
 from localization import localize
 
 
-def create_slider(variable):
+def run(temperatures, radiation_model, variables, title=None, colors=None, **kwargs):
+    """Display control widgets and model output.
+
+    ``temperatures`` should be a dict containing temperatures in degree Celsius.
+    The temperatures will be displayed as thermometers.
+
+    ``ratiation_model`` is a callable accepting arguments with names in ``variables``.
+
+    Accepts optional title for the figure, list of colors for the thermometers, and
+    kwargs passed to the Thermometer class.
+    """
+
+    num_thermometers = len(temperatures)
+    if colors is None:
+        colors = ["r", "b"] * num_thermometers
+
+    with plt.ioff():
+        fig, axes = plt.subplots(1, num_thermometers)
+        fig.canvas.header_visible = False
+        fig.canvas.toolbar_visible = False
+        fig.canvas.footer_visible = False
+        fig.canvas.resizable = False
+
+    if title is not None:
+        fig.suptitle(localize(title))
+
+    # Create control widgets
+    widgets = []
+    sliders = []
+
+    for var in variables:
+        description_label = _create_decription_label(var)
+        slider = _create_slider(var)
+        unit_label = _create_unit_label(var)
+        sliders.append(slider)
+        widgets.append(HBox([description_label, slider, unit_label]))
+
+    # Workaround for when there is only one thermometer
+    if num_thermometers == 1:
+        axes = [axes]
+
+    # Create the initial thermometers.
+    thermometers = []
+    for i, (description, temperature) in enumerate(temperatures.items()):
+        kwargs_current = kwargs.copy()
+        kwargs_current["facecolor"] = colors[i]
+        thermometer = Thermometer(**kwargs_current)
+        thermometer.draw(temperature, ax=axes[i], description=description)
+        thermometers.append(thermometer)
+
+    # Update them when a slider changes
+    def update(change):
+        temperatures = radiation_model(*[slider.value for slider in sliders])
+        for i, (description, temperature) in enumerate(temperatures.items()):
+            kwargs_current = kwargs.copy()
+            kwargs_current["facecolor"] = colors[i]
+            # Re-draw the thermometer instead of creating a new one.
+            thermometers[i].draw(temperature, ax=axes[i], description=description)
+
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+
+    [slider.observe(update, names="value") for slider in sliders]
+
+    return AppLayout(
+        header=VBox(widgets),
+        center=fig.canvas,
+        pane_heights=[1, 6, 0],
+    )
+
+
+def _create_slider(variable):
     """Return a slider widget for ``variable``.
 
     Parameters
@@ -69,7 +140,7 @@ def create_slider(variable):
         )
 
 
-def create_decription_label(variable):
+def _create_decription_label(variable):
     descriptions = {
         "temperature": "Temperature",
         "solar": "Solar intensity",
@@ -84,7 +155,7 @@ def create_decription_label(variable):
     return widgets.Label(description, layout=layout)
 
 
-def create_unit_label(variable):
+def _create_unit_label(variable):
     units = {
         "temperature": "°C",
         "solar": "% of present value",
@@ -95,77 +166,6 @@ def create_unit_label(variable):
     layout = widgets.Layout(width="20%", height="auto")
     unit = localize(units[variable])
     return widgets.Label(unit, layout=layout)
-
-
-def run(temperatures, radiation_model, variables, title=None, colors=None, **kwargs):
-    """Display control widgets and model output.
-
-    ``temperatures`` should be a dict containing temperatures in degree Celsius.
-    The temperatures will be displayed as thermometers.
-
-    ``ratiation_model`` is a callable accepting arguments with names in ``variables``.
-
-    Accepts optional title for the figure, list of colors for the thermometers, and
-    kwargs passed to the Thermometer class.
-    """
-
-    num_thermometers = len(temperatures)
-    if colors is None:
-        colors = ["r", "b"] * num_thermometers
-
-    with plt.ioff():
-        fig, axes = plt.subplots(1, num_thermometers)
-        fig.canvas.header_visible = False
-        fig.canvas.toolbar_visible = False
-        fig.canvas.footer_visible = False
-        fig.canvas.resizable = False
-
-    if title is not None:
-        fig.suptitle(localize(title))
-
-    # Create control widgets
-    widgets = []
-    sliders = []
-
-    for var in variables:
-        description_label = create_decription_label(var)
-        slider = create_slider(var)
-        unit_label = create_unit_label(var)
-        sliders.append(slider)
-        widgets.append(HBox([description_label, slider, unit_label]))
-
-    # Workaround for when there is only one thermometer
-    if num_thermometers == 1:
-        axes = [axes]
-
-    # Create the initial thermometers.
-    thermometers = []
-    for i, (description, temperature) in enumerate(temperatures.items()):
-        kwargs_current = kwargs.copy()
-        kwargs_current["facecolor"] = colors[i]
-        thermometer = Thermometer(**kwargs_current)
-        thermometer.draw(temperature, ax=axes[i], description=description)
-        thermometers.append(thermometer)
-
-    # Update them when a slider changes
-    def update(change):
-        temperatures = radiation_model(*[slider.value for slider in sliders])
-        for i, (description, temperature) in enumerate(temperatures.items()):
-            kwargs_current = kwargs.copy()
-            kwargs_current["facecolor"] = colors[i]
-            # Re-draw the thermometer instead of creating a new one.
-            thermometers[i].draw(temperature, ax=axes[i], description=description)
-
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-
-    [slider.observe(update, names="value") for slider in sliders]
-
-    return AppLayout(
-        header=VBox(widgets),
-        center=fig.canvas,
-        pane_heights=[1, 6, 0],
-    )
 
 
 class Thermometer:
