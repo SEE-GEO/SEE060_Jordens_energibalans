@@ -1,4 +1,4 @@
-"""Utilities to create sliders and draw thermometers."""
+"""Display sliders and thermometers for a model."""
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
