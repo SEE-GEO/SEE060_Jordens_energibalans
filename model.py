@@ -97,9 +97,7 @@ def create_unit_label(variable):
     return widgets.Label(unit, layout=layout)
 
 
-def display_model(
-    temperatures, radiation_model, variables, title=None, colors=None, **kwargs
-):
+def run(temperatures, radiation_model, variables, title=None, colors=None, **kwargs):
     """Display control widgets and model output.
 
     ``temperatures`` should be a dict containing temperatures in degree Celsius.

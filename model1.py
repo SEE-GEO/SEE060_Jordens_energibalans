@@ -1,5 +1,5 @@
 import constants
-import utils
+import model
 
 
 def radiation_model_simplest(solar_intensity_percent, planet_albedo):
@@ -24,7 +24,7 @@ def radiation_model_simplest(solar_intensity_percent, planet_albedo):
 temperatures = radiation_model_simplest(solar_intensity_percent=100, planet_albedo=0.3)
 
 
-utils.display_model(
+model.run(
     temperatures,
     radiation_model=radiation_model_simplest,
     variables=["solar", "albedo"],

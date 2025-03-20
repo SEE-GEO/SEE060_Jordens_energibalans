@@ -1,5 +1,5 @@
 import constants
-import utils
+import model
 
 
 def radiation_model_greenhouse_effect(
@@ -37,7 +37,7 @@ temperatures = radiation_model_greenhouse_effect(
     solar_intensity_percent=100.0, planet_albedo=0.3, infrared_emissivity=0.9
 )
 
-utils.display_model(
+model.run(
     temperatures,
     radiation_model=radiation_model_greenhouse_effect,
     variables=["solar", "albedo", "emissivity"],

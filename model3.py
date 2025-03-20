@@ -1,5 +1,5 @@
 import constants
-import utils
+import model
 
 
 def radiation_model_greenhouse_effect_and_solar_absorption(
@@ -48,7 +48,7 @@ temperatures = radiation_model_greenhouse_effect_and_solar_absorption(
     optical_absorptivity=0.105,
 )
 
-utils.display_model(
+model.run(
     temperatures,
     radiation_model=radiation_model_greenhouse_effect_and_solar_absorption,
     variables=["solar", "albedo", "emissivity", "absorptivity"],
