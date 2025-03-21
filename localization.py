@@ -4,7 +4,7 @@ from conf import DEBUG, LANG
 
 LANG_SV = {
     # Titles
-    "Simplest model": "Enklaste modellen",
+    "Simplest model without atmosphere": "Enklaste modellen utan atmosfär",
     "With greenhouse effect": "Med växthuseffekt",
     "With greenhouse effect and solar absorption": "Med växthuseffekt och absorption av solstrålning",  # noqa
     # Descriptions

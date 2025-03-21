@@ -40,4 +40,5 @@ model.run(
         "planet_albedo": 0.3,
         "infrared_emissivity": 0.9,
     },
+    title="With greenhouse effect",
 )

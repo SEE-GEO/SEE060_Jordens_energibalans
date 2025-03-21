@@ -27,4 +27,5 @@ model.run(
         "solar_intensity_percent": 100.0,
         "planet_albedo": 0.3,
     },
+    title="Simplest model without atmosphere",
 )
