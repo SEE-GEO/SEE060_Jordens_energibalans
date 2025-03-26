@@ -106,13 +106,13 @@ def _create_slider(variable, value):
         step = 0.01
         readout_format = ".2f"
     elif variable == "infrared_emissivity":
-        minval = 0.0
+        minval = 0.1
         maxval = 1.0
         step = 0.005
         readout_format = ".3f"
     elif variable == "optical_absorptivity":
         minval = 0.0
-        maxval = 1.0
+        maxval = 0.5
         step = 0.005
         readout_format = ".3f"
     else:
