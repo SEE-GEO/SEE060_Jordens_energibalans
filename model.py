@@ -4,7 +4,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 from ipywidgets import AppLayout, HBox, VBox, widgets
 
-from localization import localize
+from translations import tr
 
 
 def run(model, parameters, title=None, colors=None, **kwargs):
@@ -32,7 +32,7 @@ def run(model, parameters, title=None, colors=None, **kwargs):
         fig.canvas.resizable = False
 
     if title is not None:
-        fig.suptitle(localize(title))
+        fig.suptitle(title)
 
     # Create control widgets
     widgets = []
@@ -130,29 +130,29 @@ def _create_slider(variable, value):
 
 def _create_decription_label(variable):
     descriptions = {
-        "temperature": "Temperature",
-        "solar_intensity_percent": "Solar intensity",
-        "planet_albedo": "Planet albedo",
-        "infrared_emissivity": "Infrared emissivity",
-        "optical_absorptivity": "Optical absorptivity",
+        "temperature": "temperature",
+        "solar_intensity_percent": "solar_intensity",
+        "planet_albedo": "planet_albedo",
+        "infrared_emissivity": "infrared_emissivity",
+        "optical_absorptivity": "optical_absorptivity",
     }
     layout = widgets.Layout(
         width="20%", height="auto", display="flex", justify_content="flex-end"
     )
-    description = localize(descriptions[variable])
+    description = tr(descriptions[variable])
     return widgets.Label(description, layout=layout)
 
 
 def _create_unit_label(variable):
     units = {
-        "temperature": "°C",
-        "solar_intensity_percent": "% of present value",
-        "planet_albedo": "(fraction)",
-        "infrared_emissivity": "(fraction)",
-        "optical_absorptivity": "(fraction)",
+        "temperature": "unit.C",
+        "solar_intensity_percent": "unit.percent_of_present_value",
+        "planet_albedo": "unit.fraction",
+        "infrared_emissivity": "unit.fraction",
+        "optical_absorptivity": "unit.fraction",
     }
     layout = widgets.Layout(width="20%", height="auto")
-    unit = localize(units[variable])
+    unit = tr(units[variable])
     return widgets.Label(unit, layout=layout)
 
 
@@ -277,7 +277,7 @@ class Thermometer:
             ax.get_figure().suptitle(title)
 
         if description:
-            ax.set_xlabel(localize(description))
+            ax.set_xlabel(description)
 
         if self._temp_text is not None:
             self._temp_text.remove()
