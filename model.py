@@ -84,7 +84,8 @@ def _create_slider(variable, value):
 
     Parameters
     ----------
-    variable : {"temperature", "solar", "albedo", "emissivity"}
+    variable : {"temperature", "solar_intensity_percent", "planet_albedo",
+                "infrared_emissivityemissivity", "optical_absorptivity"}
         The variable to create the slider for.
 
     """
