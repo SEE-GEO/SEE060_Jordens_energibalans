@@ -23,7 +23,7 @@ Du behöver följande Python-paket installerade för att kunna köra koden:
 
 - matplotlib
 - ipywidgets
-- jupyterlab-widgets
+- ipympl
 
 [zip]: https://github.com/SEE-GEO/SEE060_Jordens_energibalans/archive/refs/heads/main.zip
 
