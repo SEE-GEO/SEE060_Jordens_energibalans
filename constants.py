@@ -1,4 +1,4 @@
-"""Some physical constants."""
+"""Physical constants."""
 
 ABSOLUTE_ZERO_DEG_C = -273.15  # degC
 SOLAR_INTENSITY = 1361.0  # W.m-2
